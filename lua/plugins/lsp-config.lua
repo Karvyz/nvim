@@ -1,27 +1,38 @@
 return {
+	{ 'williamboman/mason.nvim' },
+	{ 'williamboman/mason-lspconfig.nvim' },
+	{ 'neovim/nvim-lspconfig' },
+	{ 'hrsh7th/cmp-nvim-lsp' },
+	{ 'hrsh7th/nvim-cmp' },
+	{ 'L3MON4D3/LuaSnip' },
 	{
-    		"williamboman/mason.nvim",
+		'VonHeikemen/lsp-zero.nvim',
+		branch = 'v3.x',
 		config = function()
-			require("mason").setup()
-		end
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		config = function()
-			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "rust_analyzer" },
+			local lsp_zero = require('lsp-zero')
+			lsp_zero.on_attach(function(client, bufnr)
+				lsp_zero.default_keymaps({ buffer = bufnr })
+				lsp_zero.buffer_autoformat()
+			end)
+
+			require('mason').setup({})
+			require('mason-lspconfig').setup({
+				ensure_installed = {},
+				handlers = {
+					lsp_zero.default_setup,
+				},
+			})
+
+			local cmp = require('cmp')
+			cmp.setup({
+				mapping = cmp.mapping.preset.insert({
+					['<CR>'] = cmp.mapping.confirm({ select = false }),
+				}),
+				preselect = 'item',
+				completion = {
+					completeopt = 'menu,menuone,noinsert'
+				},
 			})
 		end
 	},
-	{
-		"neovim/nvim-lspconfig",
-		config = function()
-			local lspconfig = require("lspconfig")
-			lspconfig.lua_ls.setup({})
-			vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, {})
-    			vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
-			vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
-			vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, {})
-		end
-	}
 }
