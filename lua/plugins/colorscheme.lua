@@ -1,14 +1,11 @@
 return {
-	{ 
-		"catppuccin/nvim", 
-		name = "catppuccin",
+	{
+		'Mofiqul/vscode.nvim',
+		name = 'vscode',
 		priority = 1000,
 		opts = {},
 		config = function()
-			require("catppuccin").setup({
-				 transparent_background = false,
-			})
-			vim.cmd.colorscheme "catppuccin"
+			vim.cmd.colorscheme 'vscode'
 		end
 	},
 }
